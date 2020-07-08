@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <bean destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource" id="dataSource">
+    <property value="${jdbc.driverClassName}" name="driverClassName"/>
+    <property value="${jdbc.url}" name="url"/>
+    <property value="${jdbc.username}" name="username"/>
+    <property value="${jdbc.password}" name="password"/>
+</bean>
+    <bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
+    <property name="dataSource" ref="dataSource"/>
+    <property value="org.example.authoregapp.model" name="packagesToScan"/>
+    <property name="jpaVendorAdapter">
+    <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+</property>
+    <property name="jpaProperties">
+    <props>
+    <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+    <prop key="hibernate.show_sql">true</prop>
+</props>
+</property>
+</bean>
+    <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+</bean>
+    <tx:annotation-driven/>
+    <jpa:repositories base-package="org.example.authoregapp.dao"/>
+</beans>
